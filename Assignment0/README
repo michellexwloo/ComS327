@@ -1,0 +1,11 @@
+Project explanation:
+
+The codes are written in 'Assignment0.c'. 
+
+ All possible next moves of the knight are defined in 2 arrays, 'row_move' and 'col_move'. The possible paths of the knight is stored in 'result'.
+ 
+ In 'tour()', I use Depth First Search algorithm to go through the board and look for possible paths. It will start with going to the first possible next move and repeat until there's no possible next move, i.e. a dead end. When it reaches a dead end and have not visited all cells, it'll backtrack to the previous cell and look for any possible next move to keep going.
+
+ In 'main()', it first call 'tour()' to explore the board to fill up 'result' with possible paths. Once 'result' is filled up, it will print the output, i.e. the numbers stored in 'result'.
+
+'Assignment0.c' can be compiled by 'make A0_output' in the command line, and the output can be seen by running 'A0_output'.

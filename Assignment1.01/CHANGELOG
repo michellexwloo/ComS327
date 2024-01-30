@@ -1,7 +1,7 @@
 01/29/2024 10:50 PM
     - Created the structure for Assignment 1.01
     - Created a skeleton Assignment1.01.c
-    - Main project description in Readme
+    - Wrote project description in Readme
     - Created Makefile script
 
 01/30/2024 9:40 AM
@@ -11,3 +11,7 @@
 01/30/2024 3:45 PM
     - Created function that generate gates on each side of the map
     - Created function that generate paths connecting all 4 gates
+
+01/30/2024 5:40 PM
+    - Created function that generate Pokemon Center and Pokemart
+    - Completed Readme and Makefile

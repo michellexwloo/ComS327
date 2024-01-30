@@ -83,12 +83,12 @@ void generate_terrain(char map[21][80]){
         for(c = 1; c < 79; c++){
             int chance_for_tree_or_boulder = rand() % 50;
 
-            // 2% chance for a tree to spawn in a square
+            // 2% chance for a tree to spawn
             if(chance_for_tree_or_boulder == 0){
                 map[r][c] = '^';
             }
 
-            // 2% chance for a RANDOM boulder to spawn in a square
+            // 2% chance for a random rock and boulder to spawn
             if(chance_for_tree_or_boulder == 1){
                 map[r][c] = '%';
             }
@@ -104,7 +104,7 @@ void generate_NS_path(char map[21][80], int N_exit, int S_exit){
     if(N_exit < S_exit){
         smaller_gate_val = N_exit;
         bigger_gate_val = S_exit;
-    }else{
+    } else{
         smaller_gate_val = S_exit;
         bigger_gate_val = N_exit;
     }
@@ -130,7 +130,7 @@ void generate_WE_path(char map[21][80], int W_exit, int E_exit){
     if(W_exit < E_exit){
         smaller_gate_val = W_exit;
         bigger_gate_val = E_exit;
-    }else{
+    } else{
         smaller_gate_val = E_exit;
         bigger_gate_val = W_exit;
     }
@@ -173,6 +173,77 @@ void generate_gates(char map[21][80]){
     generate_WE_path(map, W_exit, E_exit);
 }
 
+bool vertical_buildings(char map[21][80], int building_spawn_x, int building_spawn_y){
+    int r;
+    bool building = true;
+
+    for(r = 1; r <= 2; r++){
+        // If 2 spots top or bottom is a road, can't spawn a building
+        if((map[building_spawn_y - r][building_spawn_x] == '#') || (map[building_spawn_y + r][building_spawn_x] == '#')){
+            building = false;
+            break;
+        }
+
+        // If 2 spots to the top or bottom of the square to the right is a road, can't spawn a building
+        if((map[building_spawn_y - r][building_spawn_x + 1] == '#') || (map[building_spawn_y + r][building_spawn_x + 1] == '#')){
+            building = false;
+            break;
+        }
+    }
+
+    return building;
+}
+
+bool horizontal_buildings(char map[21][80], int building_spawn_x, int building_spawn_y){
+    int c;
+    bool building = true;
+
+    for(c = 1; c <= 2; c++){
+        // If 2 spots to the left or right is a road, can't spawn a building
+        if((map[building_spawn_y][building_spawn_x - c] == '#') || (map[building_spawn_y][building_spawn_x + c] == '#')){
+            building = false;
+            break;
+        }
+
+        // If 2 spots to the left or right of the square below is a road, can't spawn a building
+        if((map[building_spawn_y + 1][building_spawn_x - c] == '#') || (map[building_spawn_y + 1][building_spawn_x + c] == '#')){
+            building = false;
+            break;
+        }
+    }
+
+    return building;
+}
+
+void generate_buildings(char map[21][80]){
+    int r, c;
+    // Can generate within 3-76
+    int building_spawn_x = rand() % 74 + 3;
+    // Can generate within 3-17
+    int building_spawn_y = rand() % 15 + 3;
+
+    // Reselect if the randomly selected piece isn't a path
+    if(map[building_spawn_y][building_spawn_x] != '#'){
+        generate_buildings(map);
+    } else if(vertical_buildings(map, building_spawn_x, building_spawn_y) == true){
+        for(r = 1; r <= 2; r++){
+            for(c = 0; c <= 1; c++){
+                map[building_spawn_y + r][building_spawn_x + c] = 'M';
+                map[building_spawn_y - r][building_spawn_x + c] = 'C';
+            }
+        }
+    } else if(horizontal_buildings(map, building_spawn_x, building_spawn_y) == true){
+        for(r = 0; r <= 1; r++){
+            for(c = 1; c <= 2; c++){
+                map[building_spawn_y + r][building_spawn_x + c] = 'M';
+                map[building_spawn_y + r][building_spawn_x - c] = 'C';
+            }
+        }
+    } else{
+        generate_buildings(map);
+    }
+}
+
 void print_map(char map[21][80]){
     int r, c;
 
@@ -191,7 +262,8 @@ int main(int argc, char *argv[]){
     generate_map(map);
     generate_terrain(map);
     generate_gates(map);
-    
+    generate_buildings(map);
+
     print_map(map);
     return 0;
 }

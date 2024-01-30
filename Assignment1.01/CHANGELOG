@@ -3,3 +3,7 @@
     - Created a skeleton Assignment1.01.c
     - Main project description in Readme
     - Created Makefile script
+
+01/30/2024 9:40 AM
+    - Created function that generate map base and print map
+    - Created function that randomly generates different terrains

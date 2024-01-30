@@ -7,3 +7,7 @@
 01/30/2024 9:40 AM
     - Created function that generate map base and print map
     - Created function that randomly generates different terrains
+
+01/30/2024 3:45 PM
+    - Created function that generate gates on each side of the map
+    - Created function that generate paths connecting all 4 gates

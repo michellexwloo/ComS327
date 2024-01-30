@@ -24,18 +24,17 @@ void generate_map(char map[21][80]){
 void fill_terrain_quadrant(char map[21][80], int terrain_x, int terrain_y, int quad_x_mult, int quad_y_mult, char terrain_char){
     int r, c;
 
-    // Minimum height of 3 and max height of 6
+    // Height: 3 - 6
     int terrain_height = rand() % 4 + 3;
-    // Minimum width of 5 and max width of 9
+    // Width: 5 - 9
     int terrain_width = rand() % 5 + 5;
 
-    // Essentially the matrix generation that we all love and know with a couple extra things...
     for(r = 0; r < terrain_height; r++){
-        // Check if the matrix position is a border. If so, don't change it!
+        // Check if the matrix position is a border
         if(!((terrain_y + (r * quad_y_mult)) <= 0 || (terrain_y + (r * quad_y_mult)) >= 20)){
             for(c = 0; c < terrain_width; c++){
                 if(!((terrain_x + (c * quad_x_mult)) <= 0 || (terrain_x + (c * quad_x_mult)) >= 79)){
-                    // Adding a multiplier so we can essentially generate 4 different sized quadrants to avoid square terrain patches
+                    // Adding a multiplier to generate 4 different sized quadrants, avoiding square terrain patches
                     map[terrain_y + (r * quad_y_mult)][terrain_x + (c * quad_x_mult)] = terrain_char;
                 }
             }
@@ -45,13 +44,12 @@ void fill_terrain_quadrant(char map[21][80], int terrain_x, int terrain_y, int q
 
 void generate_terrain(char map[21][80]){
     int r, c;
-    // Counter for the type of terrain
     int type_of_terrain;
 
     for(type_of_terrain = 1; type_of_terrain < 8; type_of_terrain++){
-        // Can generate within 1-78, 0 and 79 are off limits (borders)
+        // Generate within 1-78, 0 and 79 are off limits (borders)
         int terrain_x = rand() % 78 + 1;
-        // Can generate within 1-19, 0 and 20 are off limits (borders)
+        // Generate within 1-19, 0 and 20 are off limits (borders)
         int terrain_y = rand() % 19 + 1;
         // Character for the terrain type to be generated
         char terrain_char = '.';
@@ -70,9 +68,6 @@ void generate_terrain(char map[21][80]){
         else{
             terrain_char = '%';
         }
-
-        // The idea here is to have a middle point and treat it as the 4 different corners of a square, 
-        // but each of the squares are different sizes, so it avoids making a square (most likely)
 
         // Fill in Quadrant 1
         fill_terrain_quadrant(map, terrain_x, terrain_y, -1, -1, terrain_char);
@@ -101,6 +96,83 @@ void generate_terrain(char map[21][80]){
     }
 }
 
+void generate_NS_path(char map[21][80], int N_exit, int S_exit){
+    int r, c, smaller_gate_val, bigger_gate_val;
+    // Leave some space between path and border for potential Pokemon Center or Pokemart
+    int path_correction = rand() % 15 + 3;
+
+    if(N_exit < S_exit){
+        smaller_gate_val = N_exit;
+        bigger_gate_val = S_exit;
+    }else{
+        smaller_gate_val = S_exit;
+        bigger_gate_val = N_exit;
+    }
+
+    for(r = 0; r < path_correction; r++){
+        map[r][smaller_gate_val] = '#';
+    }
+
+    for(c = smaller_gate_val; c <= bigger_gate_val; c++){
+        map[path_correction][c] = '#';
+    }
+
+    for(r = path_correction; r < 21; r++){
+        map[r][bigger_gate_val] = '#';
+    }
+}
+
+void generate_WE_path(char map[21][80], int W_exit, int E_exit){
+    int r, c, smaller_gate_val, bigger_gate_val;
+    // Leave some space between path and border for potential Pokemon Center or Pokemart
+    int path_correction = rand() % 74 + 3;
+
+    if(W_exit < E_exit){
+        smaller_gate_val = W_exit;
+        bigger_gate_val = E_exit;
+    }else{
+        smaller_gate_val = E_exit;
+        bigger_gate_val = W_exit;
+    }
+
+    for(c = 0; c < path_correction; c++){
+        map[smaller_gate_val][c] = '#';
+    }
+
+    for(r = smaller_gate_val; r <= bigger_gate_val; r++){
+        map[r][path_correction] = '#';
+    }
+
+    for(c = path_correction; c < 80; c++){
+        map[bigger_gate_val][c] = '#';
+    }
+}
+
+void generate_gates(char map[21][80]){
+    // Can generate within 3-76
+    int N_exit = rand() % 74 + 3;
+    int S_exit = rand() % 74 + 3;
+    // Can generate within 4-17
+    int W_exit = rand() % 15 + 3;
+    int E_exit = rand() % 15 + 3;
+
+    // To avoid straight paths
+    while(N_exit == S_exit){
+        N_exit = rand() % 74 + 3;
+        S_exit = rand() % 74 + 3;
+    }
+
+    generate_NS_path(map, N_exit, S_exit);
+
+    // To avoid straight paths
+    while(W_exit == E_exit){
+        W_exit = rand() % 15 + 3;
+        E_exit = rand() % 15 + 3;
+    }
+
+    generate_WE_path(map, W_exit, E_exit);
+}
+
 void print_map(char map[21][80]){
     int r, c;
 
@@ -118,6 +190,8 @@ int main(int argc, char *argv[]){
 
     generate_map(map);
     generate_terrain(map);
+    generate_gates(map);
+    
     print_map(map);
     return 0;
 }

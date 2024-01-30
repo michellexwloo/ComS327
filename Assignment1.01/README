@@ -2,3 +2,4 @@ Project explanation:
 
 The codes are written in 'Assignment1.01.c'. 
 The program runs to generate a map of size 80 x 21 units. 
+The idea of generating terrains is to have a middle point and treat it as the 4 different corners of a square,  but each of the squares are different sizes, so it avoids making an exact square.

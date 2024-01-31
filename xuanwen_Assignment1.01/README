@@ -1,8 +1,8 @@
 Project explanation:
 
 The codes are written in 'Assignment1.01.c'. 
-The program runs to generate a map of size 80 x 21 units. 
-The idea of generating terrains is to have a middle point and treat it as the 4 different corners of a square, but each of the squares are different sizes, so it avoids making an exact square.
-After generating required regions(tall grass, water, clearings), some rocks and boulders and trees are scattered on the map.
-There will be a gate being generated at each side of the map. All 4 gates will be connected by 2 paths. Random values are added while generating paths to avoid the paths being just 2 straight lines intersecting each other.
-A Pokemon Center and a Pokemart is randomly spawned with the condition of being spawn by the path.
+The program runs to generate a map of size 80 x 21 units, consisting of a border, randomly generated regions, a Pokemon Center, a Pokemart, 4 gates and connecting paths.
+The idea of generating terrains is to have a middle point and treat it as the 4 different corners of a square. Utilizing random values, each of the squares are different sizes, so it avoids making an exact square.
+After randomly generating required regions(tall grass, water, clearings), some rocks & boulders and trees are scattered on the map.
+There will be a total of 4 gates, with 1 being generated at each side of the map. All 4 gates will be connected by 2 paths. Random values are added while generating paths to avoid the paths being just 2 straight lines intersecting each other.
+Lastly, a Pokemon Center and a Pokemart is randomly spawned with the condition of being spawn at locations reachable by the paths generated earlier.

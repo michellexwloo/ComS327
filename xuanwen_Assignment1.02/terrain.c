@@ -10,12 +10,12 @@ void gen_base(struct single_map *map){
         for(c = 0; c < 80; c++){
             // If on the edge of the map, assign boulder terrain type
             if((c % 79) == 0 || (r % 20) == 0){
-                map[r][c] = '%';
+                map->terrain[r][c] = '%';
             }
 
             // If inside the map, assign clearing terrain type
             else{
-                map[r][c] = '.';
+                map->terrain[r][c] = '.';
             }
         }
     }
@@ -152,15 +152,13 @@ void gen_gates(struct single_map *map, int set_n, int set_s, int set_w, int set_
     // Can generate within 3-76. I am trying to space out so a Pokemon Center and Pokemart could fit
     if(set_n < 0){
         map->n = rand() % 74 + 3;
-    }
-    else{
+    }else{
         map->n = set_n;
     }
 
     if(set_s < 0){
         map->s = rand() % 74 + 3;
-    }
-    else{
+    }else{
         map->s = set_s;
     }
 
@@ -177,15 +175,13 @@ void gen_gates(struct single_map *map, int set_n, int set_s, int set_w, int set_
     // Can generate within 3-17. I am trying to space out so a Pokemon Center and Pokemart could fit
     if(set_w < 0){
         map->w = rand() % 15 + 3;
-    }
-    else{
+    }else{
         map->w = set_w;
     }
 
     if(set_e < 0){
         map->e = rand() % 15 + 3;
-    }
-    else{
+    }else{
         map->e = set_e;
     }
 
@@ -280,5 +276,5 @@ void print_map(struct single_map *map){
         }
         printf("\n");
     }
-	printf("Map coordinates: (%d, %d) ", map->map_col, map->map_row);
+	printf("Map coordinates: (%d, %d) ", map->map_row, map->map_col);
 }

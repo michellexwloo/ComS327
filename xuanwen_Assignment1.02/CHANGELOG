@@ -25,3 +25,14 @@
 	- Modify code to make map a struct
 	- Created Makefile script
 	- Created a skeleton for Assignment1.02.c
+
+02/06/2024 12:00 PM
+	- Created function that generate connecting maps in the world
+	- Implemented method to move around maps in the world
+	- Implemented part of the main method for testing
+
+02/06/2024 10:00 PM
+	- Implemented the new probability for generating Pokemon Center and Pokemart
+	- Completed the main method
+	- Wrote Readme
+	- Touch up the output

@@ -1,0 +1,8 @@
+This project generates a world of 401 x 401 maps, where each maps are connected through their gates.
+The project is built from my own version of "Assignment1.01.c". The previous codes about generating terrains for a single map were moved to "terrain.c" and modified to be a 'struct'.
+The codes for this project are written in "Assignment1.02.c".
+
+The program will first generate a starting map at coordinates (0,0), it takes in command of n, s, w, e to move around the world in 4 directions.
+To jump to a specific map, user can input f x y, where x, y are the coordinates of the map.
+If a user inputs other characters or tries to move out of bound, it will show an error message and remain in the same map.
+The program also applies a new probability equation to spawn Pokemon Center and Pokemart.

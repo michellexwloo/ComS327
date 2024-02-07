@@ -13,7 +13,7 @@ struct single_map{
 
 void gen_base(struct single_map *map);
 void gen_terrain(struct single_map *map);
-void gen_gates(struct single_map *map, int set_n, int set_s, int set_w, int set_e)
+void gen_gates(struct single_map *map, int set_n, int set_s, int set_w, int set_e);
 void gen_buildings(struct single_map *map);
 void print_map(struct single_map *map);
 

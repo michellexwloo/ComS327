@@ -1,11 +1,11 @@
-poke327_102: Assignment1.02.o terrain.o
+all: Assignment1.02.o terrain.o
 	gcc Assignment1.02.o terrain.o -o poke327_102
 
 Assignment1.02.o: Assignment1.02.c terrain.h
-	gcc Assignment1.02.c -o Assignment1.02.o
+	gcc -Wall -Werror -ggdb Assignment1.02.c -c
 
 terrain.o: terrain.c terrain.h
-	gcc terrain.c -o terrain.o
+	gcc -Wall -Werror -ggdb terrain.c -c
 
 clean:
-	rm -f poke327_102 Assignment1.02.o terrain.o
+	rm -f Assignment1.02.o terrain.o poke327_102 core *~ *.o

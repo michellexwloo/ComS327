@@ -1,0 +1,9 @@
+This project is built from the professor's Assignment 1.02 solution.
+The codes for this project are written in "poke327.c".
+
+'place_pc()' method will place a PC on a random spot at the path.
+'calculate_distance()' method will calculate the distance of a specific character to the PC for all 8 directions (NSEW and diagonal directions). This part if modified from the 'dijkstra_path()' method from 1.02.
+'print_distance()' will print the calculated distance for a specific character. 
+I made 'calculate_distance()' and 'print_distance()' to be in a general form (character type is passed through the parameter) so that these methods can be reused for all characters.
+
+The program will first randomly place a PC in the map. Then, 'calculate_distance()' is called for Hiker and Rival. After that, the program will print the map of the game and the distance maps calculated for Hiker and Rival.

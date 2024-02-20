@@ -54,7 +54,6 @@ typedef enum __attribute__ ((__packed__)) terrain_type {
   ter_forest,
   ter_water,
   ter_gate,
-  ter_count,
   ter_debug
 } terrain_type_t;
 
@@ -63,15 +62,14 @@ typedef enum __attribute__((__packed__)) character_type {
 	char_hiker,
 	char_rival,
 	char_swimmer,
-	char_other,
-	char_count
+	char_other
 } character_type_t;
 
 typedef struct pc {
 	pair_t position;
 } pc_t;
 
-int movement_cost[char_count][ter_count] = {
+int movement_cost[5][11] = {
 	{INT_MAX, INT_MAX, 10, 10, 10, 20, 10, INT_MAX, INT_MAX, INT_MAX, 10},
 	{INT_MAX, INT_MAX, 10, 50, 50, 15, 10, 15, 15, INT_MAX, INT_MAX},
 	{INT_MAX, INT_MAX, 10, 50, 50, 20, 10, INT_MAX, INT_MAX, INT_MAX, INT_MAX},

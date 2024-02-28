@@ -1,0 +1,9 @@
+This project is built from the professor's Assignment 1.03 solution.
+The codes for this project are written in "poke327.c".
+
+The new implementations of this project is to spawn different types of NPCs and move them based on their own movement costs and turns.
+
+To specify the number of NPCs, run the program using "./poke327 --numtrainers #', where # is the total number of NPCs to be spawn.
+The program will at least spawn 1 hiker and 1 rival. Then, the remaining number of NPCs (including new hiker and rival) will be spawned randomly.
+
+This program runs in an infinite loop until the user kills it or a segmentation fault occurs. In the loop, the NPCs will be moving according to the rules while the PC remains at the same spot. 

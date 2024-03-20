@@ -1,0 +1,108 @@
+01/29/2024 10:50 PM
+    - Created the structure for Assignment 1.01
+    - Created a skeleton Assignment1.01.c
+    - Wrote project description in Readme
+    - Created Makefile script
+
+01/30/2024 9:40 AM
+    - Created function that generate map base and print map
+    - Created function that randomly generates different terrains
+
+01/30/2024 3:45 PM
+    - Created function that generate gates on each side of the map
+    - Created function that generate paths connecting all 4 gates
+
+01/30/2024 5:40 PM
+    - Created function that generate Pokemon Center and Pokemart
+    - Completed Readme and Makefile
+
+01/31/2024 10:15 AM
+	- Updated Readme and Makefile
+
+02/05/2024 8:00 PM
+	- Created the structure for Assignment 1.02
+	- Move code from 1.01 to new file called terrain
+	- Modify code to make map a struct
+	- Created Makefile script
+	- Created a skeleton for Assignment1.02.c
+
+02/06/2024 12:00 PM
+	- Created function that generate connecting maps in the world
+	- Implemented method to move around maps in the world
+	- Implemented part of the main method for testing
+
+02/06/2024 10:00 PM
+	- Implemented the new probability for generating Pokemon Center and Pokemart
+	- Completed the main method
+	- Wrote Readme
+	- Touch up the output
+
+02/11/2024 3:00 PM
+	- Created the strcture for Assignment 1.03
+	- Copied code from professor's 1.02 solution to 1.03
+
+02/12/2024 6:30 PM
+	- Defined characters and movement cost for all characters
+
+02/13/2024 11:00 AM
+	- Modified the algorithm for diagonal directions
+	- Implemented method to place a PC
+	- Added an if statement in print_map() to place PC 
+
+02/15/2024 4:30 PM
+	- Implemented method to calculate distance of pc for hiker
+	- Implemented method to print the distance calculated for hiker
+	- Called the method in main for testing
+
+02/16/2024 3:00 PM
+	- Generalized the calculate distance method
+	- Generalized the print distance method
+	- Completed the main method
+	- Wrote Readme
+
+02/23/2024 9:30 PM
+	- Created the structure for Assignment 1.04
+	- Copied code from 1.03 solution
+
+02/24/2024 3:00 PM
+	- Defined struct for pc and npc
+	- Added lines of codes to initialize pc and npc
+
+02/26/2024 3:35PM
+	- Implemented method for spawning hiker
+
+02/26/2024 9:12PM
+	- Modify method for spawning hiker to handle both hiker and rival
+
+02/27/2024 4:00PM
+	- Implemented method to spawn other NPCs
+
+02/27/2024 9:47PM
+	- Implemented method that controls the movement of npc
+
+02/28/2024 10:30AM
+	- Copied poke327.c to a new file for clean up
+	- Completed the main method so it will run in an infinite loop
+	- Wrote Readme
+
+03/01/2024 6:30PM
+	- Created the structure for Assignment 1.05
+	
+03/17/2024 7:00PM
+	- Implemented ncurses library
+	- Implemented method to display trainer list
+	- Implemented method of a battle
+	- Implemented method to enter a building
+
+03/18/2024 10:25AM
+	- Implement method to handle different user inputs
+	- Modified game_loop() to wait for user
+
+03/19/2024 9:00PM
+	- Added colors
+	- Update print_map()
+
+03/20/2024 10:30AM
+	- Implement colors
+	- Update Makefile with lncurses
+	- Update main method

@@ -1,0 +1,8 @@
+This project is built from the professor's Assignment 1.04 solution.
+The codes for this project are written in "poke327.c".
+
+In this program, user can move the PC around based on the corresponding keys. 
+If the PC is on top of a Pokemart/ Pokemon Center, user can enter and exit the buildings.
+User can also see the list of trainers and scroll through the list if it does not fit everything in the screen.
+User can use the escape key to quit a battle or return from the list of trainers.
+When the PC met a NPC, it will go into a Pokemon battle.

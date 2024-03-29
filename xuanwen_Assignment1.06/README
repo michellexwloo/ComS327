@@ -1,0 +1,8 @@
+This project is built from the professor's Assignment 1.05 solution and was converted into c++.
+The codes for this project's requirement are written in "poke327.cpp" and "io.cpp".
+
+In this program, it keeps all the functionality from 1.05 and has 2 new functions.
+First, user can navigate the world through different maps. User needs to move the PC to a gate and it can then move to the corresponding neighboring map.
+User can also fly to a specific map by entering the command 'f'. Then, it will ask for the x and y coordinates, and transfer the scene to the requested map.
+
+(There are some warning messages that will shown up when I run 'make', but it doesn't seem to affect the program, './poke327' will still run fine.)

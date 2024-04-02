@@ -124,3 +124,17 @@
 
 03/29/2024 12:45PM
 	- Set up for Assignment 1.07
+
+04/01/2024 10:00AM
+	- Loaded csv files
+	- Made classes for each file to be parsed
+
+04/01/2024 11:00AM
+	- Implementing methods for read_file
+
+04/01/2024 4:00PM
+	- Modified main method for testing
+	- Continue working on read_file
+
+04/02/2024 3:40PM
+	- Still working on read_file

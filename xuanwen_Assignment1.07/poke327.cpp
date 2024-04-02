@@ -8,11 +8,13 @@
 #include <sys/time.h>
 #include <assert.h>
 #include <unistd.h>
+#include <iostream>
 
 #include "heap.h"
 #include "poke327.h"
 #include "character.h"
 #include "io.h"
+#include "read_file.h"
 
 typedef struct queue_node {
   int x, y;
@@ -1151,6 +1153,13 @@ int main(int argc, char *argv[])
   //  char c;
   //  int x, y;
   int i;
+
+  std::string file;
+  std::cout << "Enter filename: ";
+  std::cin >> file;
+  read_file(file);
+  return 0;
+
 
   do_seed = 1;
   

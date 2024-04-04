@@ -1,1 +1,9 @@
 This project is built from the professor's Assignment 1.06 solution.
+The codes for this project are written in "readfile.h" and "readfile.cpp".
+
+Run the program with: ./poke327 filename
+The possible filenames are:
+pokemon, moves, pokemon_moves, pokemon_species, experience, type_names, pokemon_stats, stats, and pokemon_types.
+Then, the terminal will print all the data of that file line by line.
+
+There are 2 possible error messages either the file is not found or the file could not be parsed for now.

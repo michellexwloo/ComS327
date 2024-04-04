@@ -9,12 +9,13 @@
 #include <assert.h>
 #include <unistd.h>
 #include <iostream>
+#include <string>
 
 #include "heap.h"
 #include "poke327.h"
 #include "character.h"
 #include "io.h"
-#include "read_file.h"
+#include "readfile.h"
 
 typedef struct queue_node {
   int x, y;
@@ -1154,11 +1155,8 @@ int main(int argc, char *argv[])
   //  int x, y;
   int i;
 
-  std::string file;
-  std::cout << "Enter filename: ";
-  std::cin >> file;
-  read_file(file);
-  return 0;
+	read_file(argv[1]);
+	return 0;
 
 
   do_seed = 1;
@@ -1184,7 +1182,8 @@ int main(int argc, char *argv[])
           usage(argv[0]);
         }
       } else { /* No dash */
-        usage(argv[0]);
+        // usage(argv[0]);
+		// read_file(argv[1]);
       }
     }
   }

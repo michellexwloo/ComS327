@@ -137,4 +137,10 @@
 	- Continue working on read_file
 
 04/02/2024 3:40PM
-	- Still working on read_file
+	- Still working on read_file of different paths
+
+04/02/2024 8:00PM
+	- Start working on printing content
+
+04/02/2024 11:00AM
+	- Trying to implement helper methods for print

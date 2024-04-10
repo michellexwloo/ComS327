@@ -1,0 +1,8 @@
+This project is built from the professor's Assignment 1.07 solution.
+The codes for this project are in "pokemon.h", "pokemon.cpp", "io.cpp", and "poke327.cpp".
+
+At the beginning of the program, it will show 3 random Pokemons where user is needs to choose one.
+After user has chose their Pokemon, it will show the stats of the chosen Pokemon.
+A random number (maximum 6) of Pokemons are given to the generated trainers. When user encountered a trainer, it will show all the Pokemons that trainer has.
+User also has a 10% chance to encounter a random wild Pokemon while exploring in tall grass areas.
+The level of the trainers' Pokemons and the wild Pokemons vary, depending on the distance from the center of the map.

@@ -110,6 +110,7 @@ pokemon::pokemon(int level) : level(level)
     effective_stat[i] = 5 + ((s->base_stat[i] + IV[i]) * 2 * level) / 100;
     if (i == 0) { // HP
       effective_stat[i] += 5 + level;
+	  hp = effective_stat[i];
     }
   }
 
@@ -169,4 +170,33 @@ const char *pokemon::get_move(int i) const
   } else {
     return "";
   }
+}
+
+// Getter and Setter for Pokemon's hp (not stat hp)
+void pokemon::set_health(int health) {
+	hp = health;
+}
+
+int pokemon::get_health() const {
+	return hp;
+}
+
+int pokemon::get_level() const {
+	return level;
+}
+
+int pokemon::get_move_priority(int move) const {
+	return moves[move_index[move]].priority;
+}
+
+int pokemon::get_move_accuracy(int move) const {
+	return moves[move_index[move]].accuracy;
+}
+
+int pokemon::get_move_power(int move) const {
+	return moves[move_index[move]].power;
+}
+
+int pokemon::get_base_speed() const {
+	return species[pokemon_index].base_stat[5];
 }

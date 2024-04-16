@@ -1,9 +1,10 @@
 #include <unistd.h>
 #include <ncurses.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <limits.h>
+#include <cctype>
+#include <cstdlib>
+#include <climits>
 #include <string>
+#include <cstring>
 
 #include "io.h"
 #include "character.h"
@@ -372,46 +373,473 @@ static void io_list_trainers()
 
 void io_pokemart()
 {
-  mvprintw(0, 0, "Welcome to the Pokemart.  Could I interest you in some Pokeballs?");
+  //mvprintw(0, 0, "Welcome to the Pokemart.  Could I interest you in some Pokeballs?");
+  mvprintw(0,0, "Your supplies have been restored!");
   refresh();
+  for(int i=0; i<3; i++) {
+	world.pc.supplies[i] = 5;
+  }
   getch();
 }
 
 void io_pokemon_center()
 {
-  mvprintw(0, 0, "Welcome to the Pokemon Center.  How can Nurse Joy assist you?");
+  //mvprintw(0, 0, "Welcome to the Pokemon Center.  How can Nurse Joy assist you?");
   refresh();
+  mvprintw(0,0, "Your Pokemons are all fully healed!");
+  for(int i=0; i<6 && world.pc.buddy[i] ; i++) {
+	world.pc.buddy[i]->set_health(world.pc.buddy[i]->get_hp());
+  }
   getch();
 }
 
-void io_battle(character *aggressor, character *defender)
-{
-  std::string s;
-  npc *n = (npc *) ((aggressor == &world.pc) ? defender : aggressor);
-  int i;
+int io_use_item(int item) {	// 0:revives, 1:potions, 2:Poke ́balls
+	char input;
+	if(item == 0) {
+		if(world.pc.supplies[0] > 0) {
+			mvprintw(11,0, "Choose a Pokemon to revive:	(c) cancel");
+			mvprintw(12,1, "(1) %s", world.pc.buddy[0]->get_species());
+			if(world.pc.buddy[1] != NULL) {
+				mvprintw(13,1, "(2) %s", world.pc.buddy[1]->get_species());
+			} else if(world.pc.buddy[2] != NULL) {
+				mvprintw(14,1, "(3) %s", world.pc.buddy[2]->get_species());
+			} else if(world.pc.buddy[3] != NULL) {
+				mvprintw(15,1, "(4) %s", world.pc.buddy[3]->get_species());
+			} else if(world.pc.buddy[4] != NULL) {
+				mvprintw(16,1, "(5) %s", world.pc.buddy[4]->get_species());
+			} else if(world.pc.buddy[5] != NULL) {
+				mvprintw(17,1, "(6) %s", world.pc.buddy[5]->get_species());
+			}
+		} else {	// No revive
+			return 1;
+		}
 
-  if (!n->buddy[1]) {
-    s = "My pokemon is " + std::string(n->buddy[0]->get_species());
-  } else {
-    s = "My pokemon are " + std::string(n->buddy[0]->get_species());
-  }
+		input = getch();
+		pokemon *pkm;
+		if(input == '1') {
+			pkm = world.pc.buddy[0];
+		} else if (input == '2') {
+			pkm = world.pc.buddy[1];
+		} else if (input == '3') {
+			pkm = world.pc.buddy[2];
+		} else if (input == '4') {
+			pkm = world.pc.buddy[3];
+		} else if (input == '5') {
+			pkm = world.pc.buddy[4];
+		} else if (input == '6') {
+			pkm = world.pc.buddy[5];
+		} else {
+			return 1;
+		}
 
-  for (i = 1; i < 6 && n->buddy[i]; i++) {
-    s += ", ";
-    if (i == 4 || !n->buddy[i + 1]) {
-      s += "and ";
-    }
-    s += n->buddy[i]->get_species();
-  }
+		if(pkm == NULL || pkm->get_health() > 0) {
+			return 1;
+		}
+
+		pkm->set_health(pkm->get_hp()/2);
+		world.pc.supplies[0]--;
+		return 0;
+	}
+	else if(item == 1) {
+		if(world.pc.supplies[1] > 0) {
+			mvprintw(11,0, "Choose a Pokemon to heal:	(c) cancel");
+			mvprintw(12,1, "(1) %s", world.pc.buddy[0]->get_species());
+			if(world.pc.buddy[1] != NULL) {
+				mvprintw(13,1, "(2) %s", world.pc.buddy[1]->get_species());
+			} else if(world.pc.buddy[2] != NULL) {
+				mvprintw(14,1, "(3) %s", world.pc.buddy[2]->get_species());
+			} else if(world.pc.buddy[3] != NULL) {
+				mvprintw(15,1, "(4) %s", world.pc.buddy[3]->get_species());
+			} else if(world.pc.buddy[4] != NULL) {
+				mvprintw(16,1, "(5) %s", world.pc.buddy[4]->get_species());
+			} else if(world.pc.buddy[5] != NULL) {
+				mvprintw(17,1, "(6) %s", world.pc.buddy[5]->get_species());
+			}
+		} else {	// No potion
+			return -1;
+		}
+
+		char input = getch();
+		pokemon *pkm;
+		if(input == '1') {
+			pkm = world.pc.buddy[0];
+		} else if (input == '2') {
+			pkm = world.pc.buddy[1];
+		} else if (input == '3') {
+			pkm = world.pc.buddy[2];
+		} else if (input == '4') {
+			pkm = world.pc.buddy[3];
+		} else if (input == '5') {
+			pkm = world.pc.buddy[4];
+		} else if (input == '6') {
+			pkm = world.pc.buddy[5];
+		} else {
+			return 1;
+		}
+
+		if(pkm == NULL || pkm->get_health() == pkm->get_hp()) {
+			return 1;
+		}
+
+		pkm->set_health(std::min((pkm->get_health()+20), (pkm->get_hp())));
+		world.pc.supplies[1]--;
+		return 0;
+	}
+	else {
+		if (world.pc.supplies[2] > 0) {
+			if(world.pc.buddy[5] != NULL) {
+				return 0;
+			}
+
+			for(int i=1; i<6; i++) {
+				if(world.pc.buddy[i] == NULL) {
+					world.pc.supplies[2]--;
+					return i;
+				}
+			}
+		} else {
+			return -1;
+		}
+	}
+	return 0;
+}
+
+
+int io_swtich(pokemon **pcPokemon) {
+	mvprintw(11, 0, "Which Pokemon to swtich?	(c) cancel");
+	mvprintw(12,1, "(1) %s", world.pc.buddy[0]->get_species());
+	if(world.pc.buddy[1] != NULL) {
+		mvprintw(13,1, "(2) %s", world.pc.buddy[1]->get_species());
+	} else if(world.pc.buddy[2] != NULL) {
+		mvprintw(14,1, "(3) %s", world.pc.buddy[2]->get_species());
+	} else if(world.pc.buddy[3] != NULL) {
+		mvprintw(15,1, "(4) %s", world.pc.buddy[3]->get_species());
+	} else if(world.pc.buddy[4] != NULL) {
+		mvprintw(16,1, "(5) %s", world.pc.buddy[4]->get_species());
+	} else if(world.pc.buddy[5] != NULL) {
+		mvprintw(17,1, "(6) %s", world.pc.buddy[5]->get_species());
+	}
+
+	char input = getch(); 
+	pokemon *pkm;
+	if(input == '1') {
+		pkm = world.pc.buddy[0];
+	} else if (input == '2') {
+		pkm = world.pc.buddy[1];
+	} else if (input == '3') {
+		pkm = world.pc.buddy[2];
+	} else if (input == '4') {
+		pkm = world.pc.buddy[3];
+	} else if (input == '5') {
+		pkm = world.pc.buddy[4];
+	} else if (input == '6') {
+		pkm = world.pc.buddy[5];
+	} else {
+		return 1;
+	}
+
+	if (pkm == NULL || pkm->get_health() == 0 || *pcPokemon == pkm) {
+		return 1;
+	}
+	*pcPokemon = pkm;
+	return 0;
+}
+
+void io_attack(pokemon *opponent, pokemon *pcPokemon, int move) {
+	int opp_prior = opponent->get_move_priority(0);
+	int opp_speed = opponent->get_speed();
+	int pc_prior = pcPokemon->get_move_priority(move);
+	int pc_speed = pcPokemon->get_speed();
+
+	bool pcMove;
+	if(pc_prior > opp_prior) {
+		pcMove = true;
+	} else if(pc_prior < opp_prior) {
+		pcMove = false;
+	} else {
+		if(pc_speed > opp_speed) {
+			pcMove = true;
+		} else if(pc_speed < opp_speed) {
+			pcMove = false;
+		} else {
+			if(rand()%2 == 0) {
+				pcMove = true;
+			}else {
+				pcMove = false;
+			}
+		}
+	}
+
+	int damage;
+	if(pcMove) {
+		if((rand()%100) < pcPokemon->get_move_accuracy(move)) {
+			damage = ((((((2*pcPokemon->get_level())/5)+2)*pcPokemon->get_move_power(move) * (pcPokemon->get_atk() / opponent->get_def()))/50)+2);
+			opponent->set_health(std::max((opponent->get_health()-damage), 0));
+		}
+
+		if(opponent->get_health() == 0) {
+			return;
+		}
+
+		if((rand()%100) < opponent->get_move_accuracy(0)) {
+			damage = ((((((2*opponent->get_level())/5)+2)*opponent->get_move_power(0) * (opponent->get_atk() / pcPokemon->get_def()))/50)+2);
+			pcPokemon->set_health(std::max((pcPokemon->get_health()-damage), 0));
+		}
+	} else {
+		if((rand()%100) < opponent->get_move_accuracy(0)) {
+			damage = ((((((2*opponent->get_level())/5)+2)*opponent->get_move_power(0) * (opponent->get_atk() / pcPokemon->get_def()))/50)+2);
+			pcPokemon->set_health(std::max((pcPokemon->get_health()-damage), 0));
+		}
+
+		if(pcPokemon->get_health() == 0) {
+			return;
+		}
+
+		if((rand()%100) < pcPokemon->get_move_accuracy(move)) {
+			damage = ((((((2*pcPokemon->get_level())/5)+2)*pcPokemon->get_move_power(move) * (pcPokemon->get_atk() / opponent->get_def()))/50)+2);
+			opponent->set_health(std::max((opponent->get_health()-damage), 0));
+		}
+	}
+}
+
+// void io_battle(character *aggressor, character *defender)
+// {
+//   std::string s;
+//   npc *n = (npc *) ((aggressor == &world.pc) ? defender : aggressor);
+//   int i;
+
+//   if (!n->buddy[1]) {
+//     s = "My pokemon is " + std::string(n->buddy[0]->get_species());
+//   } else {
+//     s = "My pokemon are " + std::string(n->buddy[0]->get_species());
+//   }
+
+//   for (i = 1; i < 6 && n->buddy[i]; i++) {
+//     s += ", ";
+//     if (i == 4 || !n->buddy[i + 1]) {
+//       s += "and ";
+//     }
+//     s += n->buddy[i]->get_species();
+//   }
     
-  s += ".";
+//   s += ".";
 
-  io_queue_message("%s", s.c_str());
+//   io_queue_message("%s", s.c_str());
 
-  n->defeated = 1;
-  if (n->ctype == char_hiker || n->ctype == char_rival) {
-    n->mtype = move_wander;
-  }
+//   n->defeated = 1;
+//   if (n->ctype == char_hiker || n->ctype == char_rival) {
+//     n->mtype = move_wander;
+//   }
+// }
+
+void io_battle(character *aggressor, character *defender) {
+	npc *n = (npc *) ((aggressor == &world.pc) ? defender : aggressor);
+	bool battleCont = true;
+	int turn = 1;
+	int npcPokeIdx = 0;
+	pokemon *npcPokemon = n->buddy[npcPokeIdx];
+	pokemon *pcPokemon;
+	for(int i=0; i<6; i++) {
+		if(world.pc.buddy[i]->get_health() != 0) {
+			pcPokemon = world.pc.buddy[i];
+			break;
+		}
+	}
+
+	do{
+		do{
+			clear();
+
+			mvprintw(0,0, "Your Pokemon: %s -- HP: %d", pcPokemon->get_species(), pcPokemon->get_health());
+			mvprintw(1,0, "Opponent's Pokemon: %s -- HP: %d", npcPokemon->get_species(), npcPokemon->get_health());
+			// PC moves
+			mvprintw(3,0, "Make a move:");
+			mvprintw(4,1, "(1) %s", pcPokemon->get_move(0));
+			if(strcmp(pcPokemon->get_move(1), "") != 0) {
+				mvprintw(5,1, "(2) %s", pcPokemon->get_move(1));
+			}
+			if(strcmp(pcPokemon->get_move(2), "") != 0) {
+				mvprintw(6,1, "(3) %s", pcPokemon->get_move(2));
+			}
+			if(strcmp(pcPokemon->get_move(3), "") != 0) {
+				mvprintw(7,1, "(4) %s", pcPokemon->get_move(3));
+			}
+
+			// PC supplies
+			mvprintw(3, 22, "Choose an item:");
+			mvprintw(4,23, "(r) Revives -- %d", world.pc.supplies[0]);
+			mvprintw(5,23, "(p) Potions -- %d", world.pc.supplies[1]);
+
+			// Switch Pokemon
+			mvprintw(9,1, "(s) Switch Pokemon");
+			mvprintw(10,1, "(f) Flee");
+
+			char action;
+			switch(action = getch()) {
+				case '1':
+					io_attack(npcPokemon, pcPokemon, 0);
+					turn = 0;
+					break;
+
+				case '2':
+				if(strcmp(pcPokemon->get_move(1),"") != 0){
+					io_attack(npcPokemon, pcPokemon, 1);
+					turn = 0;
+				} else {
+					turn = 1;
+				}
+				break;
+
+				case '3':
+				if(strcmp(pcPokemon->get_move(2),"") != 0){
+					io_attack(npcPokemon, pcPokemon, 2);
+					turn = 0;
+				} else {
+					turn = 1;
+				}
+				break;
+
+				case '4':
+				if(strcmp(pcPokemon->get_move(3),"") != 0){
+					io_attack(npcPokemon, pcPokemon, 3);
+					turn = 0;
+				} else {
+					turn = 1;
+				}
+				break;
+
+				case 'r':
+					turn = io_use_item(0);
+					if(turn == 0) {
+						int damage;
+						if((rand()%100) < npcPokemon->get_move_accuracy(0)) {
+							damage = ((((((2*npcPokemon->get_level())/5)+2)*npcPokemon->get_move_power(0) * (npcPokemon->get_atk() / pcPokemon->get_def()))/50)+2);
+							pcPokemon->set_health(std::max((pcPokemon->get_health()-damage), 0));
+						}		
+					}
+				break;
+
+				case 'p':
+					turn = io_use_item(1);
+					if(turn == 0) {
+						int damage;
+						if((rand()%100) < npcPokemon->get_move_accuracy(0)) {
+							damage = ((((((2*npcPokemon->get_level())/5)+2)*npcPokemon->get_move_power(0) * (npcPokemon->get_atk() / pcPokemon->get_def()))/50)+2);
+							pcPokemon->set_health(std::max((pcPokemon->get_health()-damage), 0));
+						}		
+					}
+				break;
+
+				case 's':
+					turn = io_swtich(&pcPokemon);
+					if(turn == 0) {
+						int damage;
+						if((rand()%100) < npcPokemon->get_move_accuracy(0)) {
+							damage = ((((((2*npcPokemon->get_level())/5)+2)*npcPokemon->get_move_power(0) * (npcPokemon->get_atk() / pcPokemon->get_def()))/50)+2);
+							pcPokemon->set_health(std::max((pcPokemon->get_health()-damage), 0));
+						}	
+					}
+				break;
+
+				case 'f':
+					if((rand()%100) < 95) {
+						battleCont = false;
+					} else {
+						int damage;
+						if((rand()%100) < npcPokemon->get_move_accuracy(0)) {
+							damage = ((((((2*npcPokemon->get_level())/5)+2)*npcPokemon->get_move_power(0) * (npcPokemon->get_atk() / pcPokemon->get_def()))/50)+2);
+							pcPokemon->set_health(std::max((pcPokemon->get_health()-damage), 0));
+						}
+					}
+					turn = 0;
+				break;
+
+				default:
+					turn = 1;
+			}
+		}while(turn);
+
+		if(npcPokemon->get_health() == 0) {
+			++npcPokeIdx;
+
+			if(npcPokeIdx == 6 || n->buddy[npcPokeIdx] == NULL) {
+				n->defeated = 1;
+				if(n->ctype == char_hiker || n->ctype == char_rival) {
+					n->mtype = move_wander;
+				}
+				battleCont = false;
+			} else {
+				npcPokemon = n->buddy[npcPokeIdx];
+			}
+		}
+
+		if(pcPokemon->get_health() == 0) {
+			for (int j=0; j<=6; j++) {
+				if(j==6 || world.pc.buddy[j] == NULL) {
+					world.quit = 2;
+					battleCont = false;
+					break;
+				}
+
+				if(world.pc.buddy[j]->get_health() != 0) {
+					pcPokemon = world.pc.buddy[j];
+					break;
+				}
+			}
+		}
+	}while(battleCont);
+}
+
+void io_bag() {
+	bool close = false;
+	do {
+		int turn = 0;
+		do {
+			clear();
+			mvprintw(0,0, "Supplies in your bag:");
+			mvprintw(1,1, "(r) Revives -- %d", world.pc.supplies[0]);
+			mvprintw(2,1, "(p) Potions -- %d", world.pc.supplies[1]);
+			mvprintw(3,1, "(b) Pokeballs -- %d", world.pc.supplies[2]);
+
+			mvprintw(0, 21, "Pokemons:");
+			mvprintw(1,22, "(1) %s -- HP: %d/%d", world.pc.buddy[0]->get_species(), world.pc.buddy[0]->get_health(),world.pc.buddy[0]->get_hp());
+			if(world.pc.buddy[1] != NULL) {
+				mvprintw(2,22, "(2) %s -- HP: %d/%d", world.pc.buddy[1]->get_species(), world.pc.buddy[1]->get_health(),world.pc.buddy[1]->get_hp());
+			}
+			if(world.pc.buddy[2] != NULL) {
+				mvprintw(3,22, "(3) %s -- HP: %d/%d", world.pc.buddy[2]->get_species(), world.pc.buddy[2]->get_health(),world.pc.buddy[2]->get_hp());
+			} 
+			if(world.pc.buddy[3] != NULL) {
+				mvprintw(4,22, "(4) %s -- HP: %d/%d", world.pc.buddy[3]->get_species(), world.pc.buddy[3]->get_health(),world.pc.buddy[3]->get_hp());
+			} 
+			if(world.pc.buddy[4] != NULL) {
+				mvprintw(5,22, "(5) %s -- HP: %d/%d", world.pc.buddy[4]->get_species(), world.pc.buddy[4]->get_health(),world.pc.buddy[4]->get_hp());
+			} 
+			if(world.pc.buddy[5] != NULL) {
+				mvprintw(6,22, "(6) %s -- HP: %d/%d", world.pc.buddy[5]->get_species(), world.pc.buddy[5]->get_health(),world.pc.buddy[5]->get_hp());
+			} 
+			mvprintw(8,0, "(c) Close bag");
+
+			char item;
+			switch(item = getch()) {
+				case 'r':
+					turn = io_use_item(0);
+					break;
+				case 'p':
+					turn = io_use_item(1);
+					break;
+				case 'c':
+					close = true;
+					turn = 0;
+					break;
+				default:
+					turn = 1;
+					break;
+			}
+		}while(turn);
+	}while(!close);
+
+	return;
 }
 
 uint32_t move_pc_dir(uint32_t input, pair_t dest)
@@ -625,6 +1053,13 @@ void io_handle_input(pair_t dest)
       dest[dim_x] = world.pc.pos[dim_x];
       turn_not_consumed = 0;
       break;
+	
+	case 'B':
+		io_bag();
+		turn_not_consumed = 1;
+		io_display();
+		break;
+
     default:
       /* Also not in the spec.  It's not always easy to figure out what *
        * key code corresponds with a given keystroke.  Print out any    *
@@ -642,22 +1077,187 @@ void io_handle_input(pair_t dest)
   } while (turn_not_consumed);
 }
 
-void io_encounter_pokemon()
-{
-  pokemon *p;
+// void io_encounter_pokemon()
+// {
+//   pokemon *p;
 
-  p = new pokemon();
+//   p = new pokemon();
 
-  io_queue_message("%s%s%s: HP:%d ATK:%d DEF:%d SPATK:%d SPDEF:%d SPEED:%d %s",
-                   p->is_shiny() ? "*" : "", p->get_species(),
-                   p->is_shiny() ? "*" : "", p->get_hp(), p->get_atk(),
-                   p->get_def(), p->get_spatk(), p->get_spdef(),
-                   p->get_speed(), p->get_gender_string());
-  io_queue_message("%s's moves: %s %s", p->get_species(),
-                   p->get_move(0), p->get_move(1));
+//   io_queue_message("%s%s%s: HP:%d ATK:%d DEF:%d SPATK:%d SPDEF:%d SPEED:%d %s",
+//                    p->is_shiny() ? "*" : "", p->get_species(),
+//                    p->is_shiny() ? "*" : "", p->get_hp(), p->get_atk(),
+//                    p->get_def(), p->get_spatk(), p->get_spdef(),
+//                    p->get_speed(), p->get_gender_string());
+//   io_queue_message("%s's moves: %s %s", p->get_species(),
+//                    p->get_move(0), p->get_move(1));
 
-  // Later on, don't delete if captured
-  delete p;
+//   // Later on, don't delete if captured
+//   delete p;
+// }
+
+void io_encounter_pokemon() {
+	pokemon *wildPokemon = new pokemon();
+	bool battleCont = true;
+	int turn = 1;
+	pokemon *pcPokemon;
+	for(int i =0; i<6; i++) {
+		if(world.pc.buddy[i]->get_health() != 0) {
+			pcPokemon = world.pc.buddy[i];
+			break;
+		}
+	}
+
+	do {
+		do {
+			clear();
+
+			mvprintw(0,0, "Your Pokemon: %s -- HP: %d", pcPokemon->get_species(), pcPokemon->get_health());
+			mvprintw(1,0, "Wild Pokemon: %s -- HP: %d", wildPokemon->get_species(), wildPokemon->get_health());
+			// PC moves
+			mvprintw(3,0, "Make a move:");
+			mvprintw(4,1, "(1) %s", pcPokemon->get_move(0));
+			if(strcmp(pcPokemon->get_move(1), "") != 0) {
+				mvprintw(5,1, "(2) %s", pcPokemon->get_move(1));
+			}
+			if(strcmp(pcPokemon->get_move(2), "") != 0) {
+				mvprintw(6,1, "(3) %s", pcPokemon->get_move(2));
+			}
+			if(strcmp(pcPokemon->get_move(3), "") != 0) {
+				mvprintw(7,1, "(4) %s", pcPokemon->get_move(3));
+			}
+
+			// PC supplies
+			mvprintw(3, 22, "Choose an item:");
+			mvprintw(4,23, "(r) Revives -- %d", world.pc.supplies[0]);
+			mvprintw(5,23, "(p) Potions -- %d", world.pc.supplies[1]);
+			mvprintw(6,23, "(b) Pokeballs -- %d", world.pc.supplies[2]);
+
+			// Switch Pokemon or Flee
+			mvprintw(9,1, "(s) Switch Pokemon");
+			mvprintw(10,1, "(f) Flee");
+
+			char action;
+			int catchResult;
+			switch(action = getch()) {
+				case '1':
+					io_attack(wildPokemon, pcPokemon, 0);
+					turn = 0;
+					break;
+
+				case '2':
+				if(strcmp(pcPokemon->get_move(1),"") != 0){
+					io_attack(wildPokemon, pcPokemon, 1);
+					turn = 0;
+				} else {
+					turn = 1;
+				}
+				break;
+
+				case '3':
+				if(strcmp(pcPokemon->get_move(2),"") != 0){
+					io_attack(wildPokemon, pcPokemon, 2);
+					turn = 0;
+				} else {
+					turn = 1;
+				}
+				break;
+
+				case '4':
+				if(strcmp(pcPokemon->get_move(3),"") != 0){
+					io_attack(wildPokemon, pcPokemon, 3);
+					turn = 0;
+				} else {
+					turn = 1;
+				}
+				break;
+
+				case 'r':
+					turn = io_use_item(0);
+					if(turn == 0) {
+						int damage;
+						if((rand()%100) < wildPokemon->get_move_accuracy(0)) {
+							damage = ((((((2*wildPokemon->get_level())/5)+2)*wildPokemon->get_move_power(0) * (wildPokemon->get_atk() / pcPokemon->get_def()))/50)+2);
+							pcPokemon->set_health(std::max((pcPokemon->get_health()-damage), 0));
+						}		
+					}
+				break;
+
+				case 'p':
+					turn = io_use_item(1);
+					if(turn == 0) {
+						int damage;
+						if((rand()%100) < wildPokemon->get_move_accuracy(0)) {
+							damage = ((((((2*wildPokemon->get_level())/5)+2)*wildPokemon->get_move_power(0) * (wildPokemon->get_atk() / pcPokemon->get_def()))/50)+2);
+							pcPokemon->set_health(std::max((pcPokemon->get_health()-damage), 0));
+						}		
+					}
+				break;
+
+				case 'b':
+					catchResult = io_use_item(2);
+					if (catchResult < 0) {
+						turn = 1;
+					} else if(catchResult == 0) {
+						turn = 0;
+						delete wildPokemon;
+						battleCont = false;
+					} else {
+						world.pc.buddy[catchResult] = wildPokemon;
+						turn = 0;
+						battleCont = false;
+					}
+				break;
+
+				case 's':
+					turn = io_swtich(&pcPokemon);
+					if(turn == 0) {
+						int damage;
+						if((rand()%100) < wildPokemon->get_move_accuracy(0)) {
+							damage = ((((((2*wildPokemon->get_level())/5)+2)*wildPokemon->get_move_power(0) * (wildPokemon->get_atk() / pcPokemon->get_def()))/50)+2);
+							pcPokemon->set_health(std::max((pcPokemon->get_health()-damage), 0));
+						}	
+					}
+				break;
+
+				case 'f':
+					if((rand()%100) < 95) {
+						battleCont = false;
+					} else {
+						int damage;
+						if((rand()%100) < wildPokemon->get_move_accuracy(0)) {
+							damage = ((((((2*wildPokemon->get_level())/5)+2)*wildPokemon->get_move_power(0) * (wildPokemon->get_atk() / pcPokemon->get_def()))/50)+2);
+							pcPokemon->set_health(std::max((pcPokemon->get_health()-damage), 0));
+						}
+					}
+					turn = 0;
+				break;
+
+				default:
+					turn = 1;
+					break;
+			}
+		}while(turn);
+
+		if(wildPokemon->get_health() == 0) {
+			delete wildPokemon;
+			battleCont = false;
+		}
+
+		if(pcPokemon->get_health() == 0) {
+			for (int j=0; j<=6; j++) {
+				if(j==6 || world.pc.buddy[j] == NULL) {
+					world.quit = 2;
+					battleCont = false;
+					break;
+				}
+
+				if(world.pc.buddy[j]->get_health() != 0) {
+					pcPokemon = world.pc.buddy[j];
+					break;
+				}
+			}
+		}
+	}while(battleCont);
 }
 
 void io_choose_starter()
@@ -696,3 +1296,5 @@ void io_choose_starter()
   noecho();
   curs_set(0);
 }
+
+

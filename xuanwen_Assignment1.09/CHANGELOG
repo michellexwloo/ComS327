@@ -167,3 +167,16 @@
 
 04/11/2024 3:40PM
 	- Set up for Assignment 1.09
+
+04/11/2024 11:00AM
+	- Modify io Pokemart and Pokemon center
+	- Implement bag function
+	- Implement use item from bag function
+
+04/11/2024 3:00PM
+	- Modify io battle to start a battle
+	- Implement helper methods for battle's options
+
+04/12/2024 10:00AM
+	- Continue working on methods used in battle
+	- Implement battle when encounter wild pokemon to catch

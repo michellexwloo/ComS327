@@ -25,6 +25,7 @@ class pokemon {
   int effective_stat[6];
   bool shiny;
   pokemon_gender gender;
+  int hp;
  public:
   pokemon();
   pokemon(int level);
@@ -38,6 +39,13 @@ class pokemon {
   const char *get_gender_string() const;
   bool is_shiny() const;
   const char *get_move(int i) const;
+  void set_health(int health);
+  int get_health() const;
+  int get_level() const;
+  int get_move_priority(int move) const;
+  int get_move_accuracy(int move) const;
+  int get_move_power(int move) const;
+  int get_base_speed() const;
 };
 
 #endif

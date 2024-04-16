@@ -920,6 +920,9 @@ void init_pc()
 
   world.pc.seq_num = world.char_seq_num++;
 
+  for(int i=0; i<3; i++) {
+	world.pc.supplies[i] = 5;
+  }
   heap_insert(&world.cur_map->turn, &world.pc);
 
   io_choose_starter();

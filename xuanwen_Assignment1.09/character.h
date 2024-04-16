@@ -55,6 +55,8 @@ class npc : public character {
 class pc : public character {
  public:
   virtual ~pc() {}
+  // supplies in bag -- 0:revives, 1:potions, 2:Poke ́balls
+  int supplies[3];
 };
 
 /* character is defined in poke327.h to allow an instance of character

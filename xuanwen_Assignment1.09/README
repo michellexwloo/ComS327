@@ -1,1 +1,14 @@
 This project is built from the professor's Assignment 1.08 solution.
+
+This program introduced a new functions which is battle and bag.
+Player will start with 5 revives, potions, and Pokeballs.
+While moving around the map, player can view their supplies in the bag using the command 'B', and use 'r' to heal a Pokemon or 'r' to revive a knocked-out Pokemon.
+
+When the pc met a trainer or a wild Pokemon, they will go into battle.
+During a battle, player can choose which Pokemon's move to attack. Player is able to switch Pokemon or use potions to heal a Pokemon. If player thinks that they are about to lose, they can flee the battle. However, there is a 5% chance that player might fail to flee.
+Similar while encountered a wild Pokemon, just that player can use a Pokeball to catch the wild Pokemon.
+
+Player can go to a Pokemon Center and fully heal their Pokemon with the command '>'.
+Player can go to a Pokemart to restore their supplies with the command '>'.
+
+The game will end immediately if all Pokemons the player have are knocked-out (0 HP).

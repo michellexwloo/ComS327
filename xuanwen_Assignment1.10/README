@@ -1,0 +1,19 @@
+This program mimics the 2048 game.
+
+How to run:
+	> make
+	> ./2048
+
+
+Description:
+After starting the game, use wasd keys to move in the 4 corresponding directions (up, left, down, right).
+	- Valid move: At least one block on the game board can move in the direction the user chose.
+Blocks of the same value will sum up and merge.
+After each valid move, a new block of either value 2 or 4 will be spawned at a empty cell randomly.
+The goal is to create a 2048 block. When a first 2048 block is created, user can choose to continue playing or quit.
+The game ends when there is no possible moves, meaning the game board is full and there is no neighboring blocks of the same number.
+
+Logic of new block value:
+The value is determined by the result of 2 ^ (row % 2 + 1). 
+This expression ensures that the generated value is either 2 or 4 based on whether the row index is even or odd. 
+If row is even (0 or 2), the value will be 2 (since 2^(0+1) = 2), and if row is odd (1 or 3), the value will be 4 (since 2^(1+1) = 4).

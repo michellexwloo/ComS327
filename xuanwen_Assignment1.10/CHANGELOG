@@ -1,0 +1,12 @@
+04/23/2024	10:00AM
+	- Set up for Assignment 1.10
+	- Created the main game board
+	- Implemented methods for creating new blocks
+
+04/23/2024	2:00PM
+	- Implemented methods to handle movements
+	- Implemeted to check game over
+	- Added colors for each block
+
+04/24/2024	1:30PM
+	- Implemented method to handle win

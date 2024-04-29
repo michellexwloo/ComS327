@@ -26,7 +26,7 @@ void move_up(int a[4][4]) {
         r=0,c=j;
         for(i=1;i<4;i++) {
             if(a[i][j]!=0) {
-                if(a[i-1][j]==0 || a[i-1][j]==a[i][j]) {
+                if(a[i-1][j]==0 || a[i-1][j]==a[i][j]) { // The cell above is empty or Can merge with the block above
                     if(a[r][c]==a[i][j]) {
                         a[r][c]*=2;
                         a[i][j]=0;
@@ -52,7 +52,7 @@ void move_down(int a[4][4]) {
         r=3,c=j;
         for(i=2;i>=0;i--) {
             if(a[i][j]!=0) {
-                if(a[i+1][j]==0 || a[i+1][j]==a[i][j]) {
+                if(a[i+1][j]==0 || a[i+1][j]==a[i][j]) {	// The cell below is empty or Can merge with the block below
                     if(a[r][c]==a[i][j]) {
                         a[r][c]*=2;
                         a[i][j]=0;
@@ -78,7 +78,7 @@ void move_left(int a[4][4]) {
         r=i,c=0;
         for(j=1;j<4;j++) {
             if(a[i][j]!=0) {
-                if(a[i][j-1]==0 || a[i][j-1]==a[i][j]) {
+                if(a[i][j-1]==0 || a[i][j-1]==a[i][j]) {	// The left cell is empty or Can merge with the left block
                     if(a[r][c]==a[i][j]) {
                         a[r][c]*=2;
                         a[i][j]=0;
@@ -104,7 +104,7 @@ void move_right(int a[4][4]) {
         r=i,c=3;
         for(j=2;j>=0;j--) {
             if(a[i][j]!=0) {
-                if(a[i][j+1]==0 || a[i][j+1]==a[i][j]) {
+                if(a[i][j+1]==0 || a[i][j+1]==a[i][j]) {	// The right cell is empty or Can merge with the right block
                     if(a[r][c]==a[i][j]) {
                         a[r][c]*=2;
                         a[i][j]=0;
@@ -146,6 +146,8 @@ void new_block(int a[4][4]) {
         c=rand()%4;
         if(a[r][c]==0) {
             a[r][c]=pow(2,r%2 + 1);
+			// For test win
+			// a[r][c]=1024;
             break;
         }
     }
@@ -258,6 +260,8 @@ int main() {
     }
     a[i1][i2]=2;
     a[i3][i4]=4;
+	// For test win
+	// a[i1][i2]=1024;
     display(a);
     
     int ch;

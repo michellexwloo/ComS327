@@ -224,6 +224,13 @@ int check_over(int a[4][4]) {
                 gl=1;
                 break;
             }
+
+	for(j=0; j<3; j++) {
+		if(a[3][j] == a[3][j+1]) {
+			gl=1;
+			break;
+		}
+	}
             
     if(fl || gl) { 
 		return 1;
